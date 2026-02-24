@@ -1,3 +1,6 @@
+"""
+Récupère , indexe les données dans une vdb avec faiss et mistral-embed  
+"""
 import os
 import requests
 from datetime import datetime, timedelta

@@ -27,7 +27,7 @@ def test_vector_db():
         return
 
     # 3. Effectuer une recherche de test
-    query = "Je cherche une exposition d'art ou un musée à Paris"
+    query = "Exposition ou vernissage sur l'art contemporain à Paris"
     print(f"- Recherche sémantique pour : '{query}'")
     
     # On récupère les 3 résultats les plus proches

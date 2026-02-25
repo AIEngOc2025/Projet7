@@ -28,7 +28,7 @@ CONSIGNES :
 1. Dites Bonjour avant toute recommandation et proposez une formule de politesse à la fin.
 2. Utilisez UNIQUEMENT les informations relatives au CONTEXTE .
 3. Nous sommes aujourd'hui le {current_date}. Ne proposez QUE des événements dont la date est égale ou postérieure à aujourd'hui.
-4. Si aucun événement ne correspond dans le contexte, dites-le poliment.
+4. Si la requête ne correspond à aucun événement dans le contexte, dites-le poliment.
 5. Pour chaque recommandation, précisez le Titre, la Date et le Lieu.
 
 
@@ -61,7 +61,7 @@ rag_chain = (
 
 # --- 5. TEST ---
 if __name__ == "__main__":
-    question = "Quelles expositions d'art contemporain me conseillez-vous pour le mois prochain ?"
+    question = "Quels lieux vister à Paris cette année?"
     print(f"🤖 Question : {question}\n")
     reponse = rag_chain.invoke(question)
     print(f"✨ Réponse du Chatbot :\n{reponse}")

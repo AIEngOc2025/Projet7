@@ -11,9 +11,10 @@ wheels/
 venv/
 .env
 
-# other files
+# other files or folders to ignore
 *.pdf
 .DS_Store
+.vscode/
 
 # data files
 data/

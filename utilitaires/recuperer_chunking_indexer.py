@@ -1,3 +1,7 @@
+"""
+Récupère , indexe les données dans une vdb avec faiss et mistral-embed  
+"""
+#%%
 import os
 import requests
 from datetime import datetime, timedelta
@@ -12,7 +16,8 @@ load_dotenv()
 
 def fetch_and_vectorize():
     # --- 1. RÉCUPÉRATION ---
-    url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records"
+    # url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records"
+    url ="https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records?limit=20&refine=lastdate_end%3A%222026%22&refine=location_countrycode%3A%22FR%22&refine=location_department%3A%22Paris%22"
     one_year_ago = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
     
     params = {
@@ -22,7 +27,9 @@ def fetch_and_vectorize():
     }
 
     print(f"- Récupération des données OpenAgenda...")
-    response = requests.get(url, params=params)
+    response = requests.get(url, 
+                            #params=""
+                            )
     results = response.json().get('results', [])
 
     # --- 2. STRUCTURATION INITIALE ---

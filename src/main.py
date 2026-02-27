@@ -5,7 +5,7 @@ Il utilise FastAPI pour créer les endpoints et gère les requêtes de l'utilisa
 """
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from pydantic import BaseModel
-from src import core_rag
+import src
 from src.core_rag import RAGSystem # On importe ta classe
 import uvicorn
 
@@ -15,11 +15,11 @@ import uvicorn
 app = FastAPI(
     title="API Culture Paris - Système RAG",
     description="Interface REST pour interroger les événements parisiens via Mistral AI",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 # On instancie ton système RAG une seule fois au démarrage
-rag = core_rag.RAGSystem()
+rag = src.core_rag.RAGSystem()
 
 # Modèle pour la requête /ask
 class Query(BaseModel):
@@ -46,6 +46,7 @@ async def ask_question(item: Query):
         return {"question": item.question, "answer": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur interne : {str(e)}")
+
 
 @app.post("/rebuild")
 async def rebuild_vdb(background_tasks: BackgroundTasks):

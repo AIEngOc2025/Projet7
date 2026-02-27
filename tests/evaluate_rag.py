@@ -1,7 +1,7 @@
 from asyncio import sleep
 from datetime import datetime
 import pandas as pd
-import chatbot # Import de ton module chatbot pour accéder à rag_chain et get_relevant_docs
+import src.chatbot # Import de ton module chatbot pour accéder à rag_chain et get_relevant_docs
 # On importe ta chaine depuis ton fichier (supposons qu'il s'appelle main_rag.py)
 # from main_rag import rag_chain, get_relevant_docs 
 

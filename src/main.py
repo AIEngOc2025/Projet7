@@ -1,3 +1,8 @@
+
+"""
+Ce module contient l'implémentation de l'API REST pour interagir avec le système RAG.
+Il utilise FastAPI pour créer les endpoints et gère les requêtes de l'utilisateur.
+"""
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from src import core_rag

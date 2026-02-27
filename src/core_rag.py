@@ -1,26 +1,36 @@
 import os
+import re
 import requests
 from datetime import datetime
 from dotenv import load_dotenv
+
 from langchain_mistralai import MistralAIEmbeddings, ChatMistralAI
 from langchain_community.vectorstores import FAISS
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 
 load_dotenv()
 
+def clean_html(text):
+    """Supprime les balises HTML pour un contexte plus propre."""
+    if not text: return ""
+    clean = re.sub(r'<[^>]+>', '', text)
+    return clean.strip()
+
 class RAGSystem:
     def __init__(self, index_path="data/vdb_paris"):
         self.index_path = index_path
+        # Utilisation du modèle d'embedding Mistral pour la cohérence vectorielle
         self.embeddings = MistralAIEmbeddings(model="mistral-embed")
-        self.llm = ChatMistralAI(model="mistral-small-latest", temperature=0.2)
+        # Température basse (0.1) pour garantir la fidélité aux documents
+        self.llm = ChatMistralAI(model="mistral-small-latest", temperature=0.1)
         self.vector_db = self._load_db()
 
     def _load_db(self):
-        """Charge l'index FAISS s'il existe."""
+        """Charge l'index FAISS local de manière sécurisée."""
         if os.path.exists(self.index_path):
             return FAISS.load_local(
                 self.index_path, 
@@ -30,57 +40,93 @@ class RAGSystem:
         return None
 
     def rebuild_database(self):
-        """Action du endpoint /rebuild : Fetch API -> Chunking -> Indexation."""
-        print("🔄 Début de la reconstruction de la base...")
+        """Action du endpoint /rebuild : Capture, Nettoyage et Indexation."""
+        print("🔄 Reconstruction de la base avec les filtres 2025-2026...")
         
-        # 1. Récupération (Exemple simplifié, adapte avec ton URL OpenData)
+        # Utilisation de l'URL et des paramètres validés en test
         url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records"
-        params = {"limit": 50, "refine": ["location_city:Paris"]}
-        response = requests.get(url, params=params)
-        data = response.json().get('results', [])
+        params = {
+            "limit": 100,
+            "where": "lastdate_end >= date'2025' AND location_city = 'Paris'",
+            "order_by": "updatedat DESC"
+        }
+        
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json().get('results', [])
+        except Exception as e:
+            print(f"❌ Erreur lors de la récupération API : {e}")
+            return
 
-        # 2. Conversion en Documents LangChain
-        raw_docs = [
-            Document(
-                page_content=f"Titre: {r.get('title_fr')}\nDescription: {r.get('description_fr')}\nLieu: {r.get('location_name')}",
-                metadata={"date": r.get('firstdate_begin'), "titre": r.get('title_fr')}
-            ) for r in data
-        ]
+        raw_docs = []
+        for r in data:
+            # Construction d'un contenu textuel riche avec labels pour faciliter la recherche
+            content = (
+                f"ÉVÉNEMENT : {r.get('title_fr')}\n"
+                f"LIEU : {r.get('location_name')} ({r.get('location_city')})\n"
+                f"DATE : {r.get('firstdate_begin')}\n"
+                f"DESCRIPTION : {clean_html(r.get('description_fr'))}"
+            )
+            raw_docs.append(Document(
+                page_content=content,
+                metadata={
+                    "date": r.get('firstdate_begin'), 
+                    "titre": r.get('title_fr')
+                }
+            ))
 
-        # 3. Chunking
-        splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=80)
+        # Chunking optimisé pour conserver l'unité d'un événement
+        splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
         docs = splitter.split_documents(raw_docs)
 
-        # 4. Création et Sauvegarde de la VDB
+        # Création et sauvegarde locale
         self.vector_db = FAISS.from_documents(docs, self.embeddings)
         self.vector_db.save_local(self.index_path)
-        print("✅ Base de données vectorielle reconstruite et sauvegardée.")
+        print(f"✅ Base de données vectorielle prête : {len(docs)} chunks indexés.")
 
     def _get_relevant_docs(self, query):
+        """Récupération sémantique des documents les plus proches."""
         if not self.vector_db:
             return ""
-        docs = self.vector_db.similarity_search(query, k=10)
-        today = datetime.now().isoformat()
-        future_docs = [d for d in docs if d.metadata.get('date', '') >= today]
-        return "\n\n".join([d.page_content for d in future_docs[:4]])
+        
+        # On récupère les 5 meilleurs résultats pour laisser un choix au LLM
+        docs = self.vector_db.similarity_search(query, k=5)
+        
+        # On passe le texte brut au prompt sans filtre de date Python 
+        # pour laisser l'IA gérer la logique temporelle.
+        return "\n\n".join([d.page_content for d in docs])
 
     def ask(self, question: str):
-        """Action du endpoint /ask."""
+        """Action du endpoint /ask avec Prompt System final."""
         if not self.vector_db:
             return "La base de données est vide. Veuillez appeler /rebuild d'abord."
 
-        template = """Vous êtes un assistant culturel expert de Paris. 
-        Utilisez UNIQUEMENT le CONTEXTE suivant pour répondre. 
-        Si ce n'est pas dans le contexte, dites-le poliment.
-        
-        CONTEXTE : {context}
-        QUESTION : {question}
-        DATE DU JOUR : {current_date}
-        
-        RÉPONSE :"""
+        template = """Tu es l'Assistant Officiel des Événements de Paris. Ton rôle est d'aider les utilisateurs à trouver des activités culturelles en utilisant EXCLUSIVEMENT les informations fournies dans le contexte ci-dessous.
+
+### RÈGLES DE CONDUITE :
+1. **Priorité au Contexte** : Si l'information n'est pas dans le contexte ou si aucun événement ne correspond à la date demandée, réponds que tu ne trouves pas d'information correspondante.
+2. **Format de Réponse** : 
+   - **Titre de l'événement** (en gras)
+   - 📍 Lieu : [Nom du lieu]
+   - 📅 Date : [Date formatée]
+   - 📝 Résumé : [2-3 phrases max sur l'intérêt de l'événement]
+3. **Intelligence Temporelle** : Utilise la "DATE ACTUELLE" pour évaluer si un événement est passé ou futur.
+4. **Ton** : Professionnel, clair et accueillant.
+
+### CONTEXTE :
+{context}
+
+### DATE ACTUELLE :
+{current_date}
+
+QUESTION DE L'UTILISATEUR : {question}
+
+RÉPONSE :"""
         
         prompt = ChatPromptTemplate.from_template(template)
         
+        # Chaîne de traitement LangChain (LCEL)
         chain = (
             {
                 "context": lambda x: self._get_relevant_docs(x), 

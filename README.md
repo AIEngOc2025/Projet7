@@ -46,13 +46,34 @@ L'interface Swagger est disponible sur [http://127.0.0.1:8000/docs](http://127.0
 ### Avec Docker
 
 ```bash
-docker build -t rag-app .
-#  Pour binder uniquement sur localhost : -p 127.0.0.1:8000:8000
+# reconstruire l'image depuis la racine du projet
+# lancer le conteneur principal, exposer le port 8000
+# (remplacer par 127.0.0.1:8000:8000 si vous ne souhaitez pas
+# écouter sur toutes les interfaces)
 docker run --rm -p 8000:8000 rag-app
 ```
 
 > **Remarque** : si Docker signale une erreur `docker-credential-xxx` lors du build, installez Docker Desktop
 > ou supprimez/modifiez la clef `credsStore` dans `~/.docker/config.json`.
+
+Des images additionnelles sont fournies ; pour les lister :
+
+```bash
+docker images | grep rag
+```
+
+Par exemple, vous pouvez exécuter l'image `rag-api` ou `rag-paris-app` de cette façon :
+
+```bash
+docker run --rm -p 8080:8000 rag-api:latest
+
+# ou
+
+docker run --rm -p 9000:8000 rag-paris-app:latest
+```
+
+En cas de conflit de port, arrêtez le conteneur en cours (`docker ps` puis
+`docker stop <id>`) ou changez simplement le mappage de ports.
 
 ## Tests 
 

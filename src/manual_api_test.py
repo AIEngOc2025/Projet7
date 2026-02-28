@@ -1,3 +1,6 @@
+import pytest
+pytest.skip("manual API script not executed during test suite", allow_module_level=True)
+
 from fastapi.testclient import TestClient
 from src.main import app  # Adapte l'import selon ta structure
 

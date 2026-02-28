@@ -1,15 +1,14 @@
-import pytest
 from fastapi.testclient import TestClient
-from src.main import app  # Vérifie que l'import pointe bien vers ton FastAPI
+from src.main import app  # Adapte l'import selon ta structure
 
 client = TestClient(app)
 
 def test_api():
-    # Test de la racine
+    # On teste la racine
     response = client.get("/")
     assert response.status_code == 200
     
-    # Test de l'endpoint /ask (on simule l'appel sans réseau)
-    # Note: si /ask appelle Mistral, il faudra peut-être mocker core_rag.RAGSystem.ask
+    # On teste /ask sans que le serveur uvicorn ne soit lancé
+    # Note : Si le RAG n'est pas initialisé, l'API renvoie souvent 200 avec un message d'erreur
     response = client.get("/ask", params={"query": "test"})
-    assert response.status_code in [200, 500] # 500 est acceptable ici si la clé API manque
+    assert response.status_code == 200

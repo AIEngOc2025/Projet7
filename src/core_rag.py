@@ -14,6 +14,13 @@ from langchain_core.documents import Document
 
 load_dotenv()
 
+
+# Récupère la clé (soit du .env local, soit du secret GitHub)
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+
+if not MISTRAL_API_KEY:
+    print("⚠️ Attention : MISTRAL_API_KEY est introuvable !")
+
 def clean_html(text):
     """Supprime les balises HTML pour un contexte plus propre."""
     if not text: return ""

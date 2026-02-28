@@ -9,6 +9,19 @@ import src.core_rag
 import uvicorn
 import asyncio
 
+import os
+from dotenv import load_dotenv
+
+# Charge le fichier .env s'il existe (Local)
+# Si on est sur GitHub, il ne trouve rien et passe à la suite sans erreur
+load_dotenv() 
+
+# Récupère la clé (soit du .env local, soit du secret GitHub)
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+
+if not MISTRAL_API_KEY:
+    print("⚠️ Attention : MISTRAL_API_KEY est introuvable !")
+
 # Lazy loading du RAGSystem
 rag = None
 

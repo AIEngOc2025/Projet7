@@ -144,7 +144,3 @@ Cette approche assure une **anti‑hallucination** (seul le contexte indexé est
 - La base vectorielle est enregistrée dans `data/vdb_paris`; elle peut être reconstruite via l'API ou le script.
 - L'approche multithread n'est pas nécessaire pour l'instant; l'indexation est déclenchée en tâche de fond via FastAPI.
 - Les clés sensibles (MISTRAL_API_KEY) sont gérées via `.env` et exclues du dépôt.
-
----
-
-Bonne soutenance ! N'hésitez pas à ajuster ce README avec votre lien GitHub ou des détails spécifiques.

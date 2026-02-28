@@ -1,24 +1,10 @@
-import requests
+import pytest
+from fastapi.testclient import TestClient
+from src.main import app  # Ajuste l'import selon ton arborescence
 
-# Ce script est destiné à être exécuté manuellement, pas par pytest.
-# Pytest collecte les fonctions commençant par "test_" dans des modules
-# nommés test_*. Renommer la fonction empêche la collecte automatique.
+client = TestClient(app)
 
-def run_manual_api_test():
-    url = "http://127.0.0.1:8000/ask"
-    payload = {"question": "Quels sont les événements qui se déroulent à la 'Cité des sciences' cette année?"}
-    
-    print("📡 Envoi d'une requête au RAG...")
-    response = requests.post(url, json=payload)
-    
-    if response.status_code == 200:
-        print("✅ Réponse reçue :")
-        print(response.json()["answer"])
-    else:
-        print(f"❌ Erreur {response.status_code}: {response.text}")
-
-if __name__ == "__main__":
-    run_manual_api_test()
-
-if __name__ == "__main__":
-    test_api()
+def test_api():
+    # Le TestClient simule l'appel sans avoir besoin de 'uvicorn'
+    response = client.get("/ask", params={"query": "C'est quoi Paris ?"})
+    assert response.status_code == 200

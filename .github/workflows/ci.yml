@@ -23,16 +23,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # On s'assure que pytest-django ou httpx sont là si nécessaire
+          pip install pytest httpx 
 
       - name: Run unit tests
+        # C'est ici qu'on règle tes erreurs de validation !
+        env:
+          MISTRAL_API_KEY: "dummy_key_for_testing"
+          PYTHONPATH: .
         run: |
-          source .venv/bin/activate
-          pytest -q
+          # Utiliser 'python -m pytest' est plus robuste pour les imports
+          python -m pytest
 
-      - name: Build Docker image (optional)
+      - name: Build Docker image
         run: |
           docker build -t rag-paris-app .

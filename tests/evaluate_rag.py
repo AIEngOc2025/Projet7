@@ -46,7 +46,7 @@ test_extremes = [
 
 for case in test_extremes:
     print(f"🛠️ Test : {case['nom']}")
-    reponse = chatbot.rag_chain.invoke(case['question'])
+    reponse = src.chatbot.rag_chain.invoke(case['question'])
     print(f"🤖 Réponse : {reponse}\n")
 
     results = []

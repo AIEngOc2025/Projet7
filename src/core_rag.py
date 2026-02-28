@@ -6,13 +6,20 @@ from dotenv import load_dotenv
 
 from langchain_mistralai import MistralAIEmbeddings, ChatMistralAI
 from langchain_community.vectorstores import FAISS
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 
 load_dotenv()
+
+
+# Récupère la clé (soit du .env local, soit du secret GitHub)
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+
+if not MISTRAL_API_KEY:
+    print("⚠️ Attention : MISTRAL_API_KEY est introuvable !")
 
 def clean_html(text):
     """Supprime les balises HTML pour un contexte plus propre."""
@@ -27,11 +34,15 @@ class RAGSystem:
         self.embeddings = MistralAIEmbeddings(model="mistral-embed")
         # Température basse (0.1) pour garantir la fidélité aux documents
         self.llm = ChatMistralAI(model="mistral-small-latest", temperature=0.1)
-        self.vector_db = self._load_db()
+        self.vector_db = None  # Initialize as None, load only if exists
+        if os.path.exists(self.index_path):
+            self.vector_db = self._load_db()
 
     def _load_db(self):
         """Charge l'index FAISS local de manière sécurisée."""
-        if os.path.exists(self.index_path):
+        # Check if the FAISS index file actually exists, not just the directory
+        index_file = os.path.join(self.index_path, "index.faiss")
+        if os.path.exists(index_file):
             return FAISS.load_local(
                 self.index_path, 
                 self.embeddings, 

@@ -6,6 +6,7 @@ dist/
 wheels/
 *.egg-info
 
+
 # Virtual environments
 .venv
 venv/
@@ -17,6 +18,7 @@ venv/
 .vscode/
 
 # data files
+*.pptx
 data/
 *.pkl
 *.faiss

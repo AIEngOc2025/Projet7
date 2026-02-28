@@ -28,6 +28,7 @@ def test_vector_db():
 
     # 3. Effectuer une recherche de test
     query = "Quels sont les détails de l'événement sur la cartographie des startups en IA prévu en mars 2026 ?"
+    query = "Exposition ou vernissage sur l'art contemporain à Paris"
     print(f"- Recherche sémantique pour : '{query}'")
     
     # On récupère les 3 résultats les plus proches

@@ -4,7 +4,7 @@ Ce test envoie une requête à l'endpoint /ask et vérifie que la réponse est c
 import requests
 
 def test_api():
-    url = "http://127.0.0.1:8000/ask"
+    url = "http://0.0.0.0:8000/ask"
     payload = {"question": "Quels sont les événements  à Paris ?"}
     
     print(" - Envoi d'une requête au RAG...")

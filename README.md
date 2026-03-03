@@ -85,14 +85,32 @@ pytest
 
 Les scripts pour tester  l'API ou le RAG se trouvent dans le dossier tests/
 
-## Démo & utilisation
+## Démo & utilisation ( diagramme des séquences )
 
 1. Construire l'index : `./build_index.sh`.
 2. Démarrer l'API.
 3. Poser des questions via `/ask` ou l'UI Swagger, par ex. :
    - "Quels événements jazz à Paris cette semaine ?"
    - "Y a-t-il des concerts gratuits à la Villette ?"
+```mermaid
+   sequenceDiagram
+    participant U as Utilisateur
+    participant API as FastAPI (Interface)
+    participant VDB as FAISS (Ta Base de Données)
+    participant LLM as Mistral AI (L'IA)
 
+    Note over U, LLM: Le flux d'une question utilisateur
+    
+    U->>API: Pose une question ("Quel concert à Paris ?")
+    API->>VDB: Recherche de similitude (Query Embedding)
+    VDB-->>API: Retourne les 5 segments d'événements les plus pertinents
+    
+    Note right of API: Construction du Prompt : <br/>"Réponds à la question UNIQUEMENT <br/>avec ces infos : [Segments FAISS]"
+    
+    API->>LLM: Envoi du Prompt enrichi (Contexte + Question)
+    LLM-->>API: Génère une réponse basée sur les faits réels
+    API-->>U: Affiche la réponse finale structurée
+```
 
 ## Architecture détaillée
 

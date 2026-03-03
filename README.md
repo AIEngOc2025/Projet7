@@ -22,7 +22,7 @@ pip install -r requirements.txt
 Un script est fourni pour récupérer les données OpenData et créer l'index FAISS dans `data/vdb_paris` :
 
 ```bash
-./build_index.sh
+./build_index.sh 
 ```
 
 ou
@@ -54,7 +54,7 @@ docker run --rm -p 8000:8000 rag-app
 ```
 
 > **Remarque** : si Docker signale une erreur `docker-credential-xxx` lors du build, installez Docker Desktop
-> ou supprimez/modifiez la clef `credsStore` dans `~/.docker/config.json`.
+> ou supprimez/modifiez la clef `credsStore` dans `~/.docker/config.json` en gardant le champ valeur vide `""` ou en lui affectant une autre valeur.
 
 Des images additionnelles sont fournies ; pour les lister :
 
@@ -85,36 +85,86 @@ pytest
 
 Les scripts pour tester  l'API ou le RAG se trouvent dans le dossier tests/
 
-## Démo & utilisation
+## Démo & utilisation ( diagramme des séquences )
 
 1. Construire l'index : `./build_index.sh`.
 2. Démarrer l'API.
 3. Poser des questions via `/ask` ou l'UI Swagger, par ex. :
    - "Quels événements jazz à Paris cette semaine ?"
    - "Y a-t-il des concerts gratuits à la Villette ?"
+```mermaid
+   sequenceDiagram
+    participant U as Utilisateur
+    participant API as FastAPI (Interface)
+    participant VDB as FAISS (Base de Données vectorielle)
+    participant LLM as Mistral AI (L'IA)
 
-## Présentation & soutenance 
-
-Préparez 10–15 diapositives couvrant :
-
-- objectif et contexte
-- architecture (RAG, FastAPI, conteneurisation)
-- sources de données et modèles choisis
-- résultats et évaluation (tests, exemples de réponses)
-- perspectives d'amélioration
-
----
+    Note over U, LLM: Le flux d'une question utilisateur
+    
+    U->>API: Pose une question ("Quel concert à Paris ?")
+    API->>VDB: Recherche de similitude (Query Embedding)
+    VDB-->>API: Retourne les 5 segments d'événements les plus pertinents
+    
+    Note right of API: Construction du Prompt : <br/>"Réponds à la question UNIQUEMENT <br/>avec ces infos : [Segments FAISS]"
+    
+    API->>LLM: Envoi du Prompt enrichi (Contexte + Question)
+    LLM-->>API: Génère une réponse basée sur les faits réels
+    API-->>U: Affiche la réponse finale structurée
+```
 
 ## Architecture détaillée
 
 Le système repose sur une chaîne moderne en quatre étapes :
+```mermaid
+   graph TD
+       subgraph "Sources de Données"
+           ODS[API OpenDataSoft Paris]
+       end
+   
+       subgraph "Pipeline d'Ingestion (Off-line / Rebuild)"
+           Scripts[Scripts d'indexation /build_index.sh]
+           Clean[Nettoyage HTML & Transformation]
+           Split[RecursiveCharacterTextSplitter]
+           Embed[Mistral Embeddings]
+       end
+   
+       subgraph "Stockage"
+           FAISS[(Index Vectoriel FAISS)]
+       end
+   
+       subgraph "Application API (FastAPI)"
+           Main[src/main.py - Endpoints /ask & /rebuild]
+           Core[src/core_rag.py - Moteur RAG]
+       end
+   
+       subgraph "Services LLM Externes"
+           M_Embed[API Mistral : mistral-embed]
+           M_LLM[API Mistral : mistral-small-latest]
+       end
+   
+       %% Flux d'ingestion
+       ODS --> Scripts
+       Scripts --> Clean
+       Clean --> Split
+       Split --> Embed
+       Embed <--> M_Embed
+       Embed --> FAISS
+   
+       %% Flux d'interrogation (RAG)
+       User((Utilisateur / Swagger)) <--> Main
+       Main <--> Core
+       Core --> FAISS
+       FAISS --> Core
+       Core <--> M_LLM
+       Core --> Main
+``` 
 
 1. **Ingestion** : récupération en temps réel des données via l'API OpenDataSoft (ensemble OpenAgenda pour Paris 2025‑2026).
 2. **Transformation** : nettoyage HTML et découpage en chunks (~800 caractères) avec `RecursiveCharacterTextSplitter` afin d'améliorer la granularité.
 3. **Stockage vectoriel** : création d'embeddings à l'aide du modèle `mistral-embed` et sauvegarde dans un index FAISS local.
 4. **Inférence** : recherche sémantique des 5 documents les plus pertinents puis génération de la réponse structurée avec `Mistral-Small-Latest` en imposant des règles de format et de priorité au contexte.
 
-Cette approche assure une **anti‑hallucination** (seul le contexte indexé est utilisé) et une **conscience temporelle** via l'injection de la date actuelle dans le prompt.
+Cette approche assure une **anti‑hallucination** (seul le contexte indexé est utilisé) et une **conscience temporelle** via l'injection de la date actuelle dans le system prompt.
 
 ## Évaluation et tests
 
@@ -135,6 +185,7 @@ Cette approche assure une **anti‑hallucination** (seul le contexte indexé est
 - `src/core_rag.py` : moteur RAG (nettoyage, indexation, prompt, génération).
 - `src/main.py` : serveur FastAPI avec endpoints `/ask` et `/rebuild`.
 - `utilitaires/recuperer_indexer.py` : script de prétraitement et vectorisation.
+- - `utilitaires/recuperer_chunking_indexer.py` : script de prétraitement, dindexation et de vectorisation.
 - `build_index.sh` : wrapper pour lancer le script d'indexation.
 - `Dockerfile` : recette de conteneurisation de l'application.
 - `requirements.txt` : dépendances Python.

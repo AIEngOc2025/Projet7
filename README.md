@@ -93,28 +93,60 @@ Les scripts pour tester  l'API ou le RAG se trouvent dans le dossier tests/
    - "Quels événements jazz à Paris cette semaine ?"
    - "Y a-t-il des concerts gratuits à la Villette ?"
 
-## Présentation & soutenance 
-
-Préparez 10–15 diapositives couvrant :
-
-- objectif et contexte
-- architecture (RAG, FastAPI, conteneurisation)
-- sources de données et modèles choisis
-- résultats et évaluation (tests, exemples de réponses)
-- perspectives d'amélioration
-
----
 
 ## Architecture détaillée
 
 Le système repose sur une chaîne moderne en quatre étapes :
+```mermaid
+   graph TD
+       subgraph "Sources de Données"
+           ODS[API OpenDataSoft Paris]
+       end
+   
+       subgraph "Pipeline d'Ingestion (Off-line / Rebuild)"
+           Scripts[Scripts d'indexation /build_index.sh]
+           Clean[Nettoyage HTML & Transformation]
+           Split[RecursiveCharacterTextSplitter]
+           Embed[Mistral Embeddings]
+       end
+   
+       subgraph "Stockage"
+           FAISS[(Index Vectoriel FAISS)]
+       end
+   
+       subgraph "Application API (FastAPI)"
+           Main[src/main.py - Endpoints /ask & /rebuild]
+           Core[src/core_rag.py - Moteur RAG]
+       end
+   
+       subgraph "Services LLM Externes"
+           M_Embed[API Mistral : mistral-embed]
+           M_LLM[API Mistral : mistral-small-latest]
+       end
+   
+       %% Flux d'ingestion
+       ODS --> Scripts
+       Scripts --> Clean
+       Clean --> Split
+       Split --> Embed
+       Embed <--> M_Embed
+       Embed --> FAISS
+   
+       %% Flux d'interrogation (RAG)
+       User((Utilisateur / Swagger)) <--> Main
+       Main <--> Core
+       Core --> FAISS
+       FAISS --> Core
+       Core <--> M_LLM
+       Core --> Main
+``` 
 
 1. **Ingestion** : récupération en temps réel des données via l'API OpenDataSoft (ensemble OpenAgenda pour Paris 2025‑2026).
 2. **Transformation** : nettoyage HTML et découpage en chunks (~800 caractères) avec `RecursiveCharacterTextSplitter` afin d'améliorer la granularité.
 3. **Stockage vectoriel** : création d'embeddings à l'aide du modèle `mistral-embed` et sauvegarde dans un index FAISS local.
 4. **Inférence** : recherche sémantique des 5 documents les plus pertinents puis génération de la réponse structurée avec `Mistral-Small-Latest` en imposant des règles de format et de priorité au contexte.
 
-Cette approche assure une **anti‑hallucination** (seul le contexte indexé est utilisé) et une **conscience temporelle** via l'injection de la date actuelle dans le prompt.
+Cette approche assure une **anti‑hallucination** (seul le contexte indexé est utilisé) et une **conscience temporelle** via l'injection de la date actuelle dans le system prompt.
 
 ## Évaluation et tests
 

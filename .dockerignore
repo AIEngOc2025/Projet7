@@ -1,20 +1,28 @@
-.venv
-venv
-env
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-.git
+# Caches Python (les plus importants à ignorer)
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Données et Index (Très lourd !)
+# On ignore les bases de données vectorielles locales pour ne pas les inclure dans l'image
+**/chroma_db/
+**/faiss_index/
+*.pdf
+*.csv
+*.json
+!metadata.json # (Optionnel : sauf si vous avez besoin d'un fichier spécifique)
+
+# Docker et Logs
+.dockerignore
+Dockerfile
+docker-compose.yml
+*.log
+.git/
 .gitignore
-.DS_Store
-.env.local
-*.md
-.pytest_cache
-.mypy_cache
-node_modules
-.next
-.vscode
-.idea
-tests/
-data/
+
+# Environnement
+.env

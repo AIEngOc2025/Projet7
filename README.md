@@ -185,6 +185,7 @@ Cette approche assure une **anti‑hallucination** (seul le contexte indexé est
 - `src/core_rag.py` : moteur RAG (nettoyage, indexation, prompt, génération).
 - `src/main.py` : serveur FastAPI avec endpoints `/ask` et `/rebuild`.
 - `utilitaires/recuperer_indexer.py` : script de prétraitement et vectorisation.
+- - `utilitaires/recuperer_chunking_indexer.py` : script de prétraitement, dindexation et de vectorisation.
 - `build_index.sh` : wrapper pour lancer le script d'indexation.
 - `Dockerfile` : recette de conteneurisation de l'application.
 - `requirements.txt` : dépendances Python.

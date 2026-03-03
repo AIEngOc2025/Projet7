@@ -50,7 +50,7 @@ L'interface Swagger est disponible sur [http://127.0.0.1:8000/docs](http://127.0
 # lancer le conteneur principal, exposer le port 8000
 # (remplacer par 127.0.0.1:8000:8000 si vous ne souhaitez pas
 # écouter sur toutes les interfaces)
-docker run --rm -p 8000:8000 rag-app
+docker run --rm -p 8000:8000 rag-api
 ```
 
 > **Remarque** : si Docker signale une erreur `docker-credential-xxx` lors du build, installez Docker Desktop
@@ -65,11 +65,16 @@ docker images | grep rag
 Par exemple, vous pouvez exécuter l'image `rag-api` ou `rag-paris-app` de cette façon :
 
 ```bash
-docker run --rm -p 8080:8000 rag-api:latest
+docker run --rm \
+  -p 8000:8000 \
+  --env-file .env \
+  --name rag-api-instance \
+  rag-api:latest \
+  uvicorn src.main:app --host 0.0.0.0 --port 8000
 
 # ou
 
-docker run --rm -p 9000:8000 rag-paris-app:latest
+docker run --rm -p 9000:8000 rag-paris-app:latest ... changement de port 
 ```
 
 En cas de conflit de port, arrêtez le conteneur en cours (`docker ps` puis
@@ -185,7 +190,7 @@ Cette approche assure une **anti‑hallucination** (seul le contexte indexé est
 - `src/core_rag.py` : moteur RAG (nettoyage, indexation, prompt, génération).
 - `src/main.py` : serveur FastAPI avec endpoints `/ask` et `/rebuild`.
 - `utilitaires/recuperer_indexer.py` : script de prétraitement et vectorisation.
-- - `utilitaires/recuperer_chunking_indexer.py` : script de prétraitement, dindexation et de vectorisation.
+- `utilitaires/recuperer_chunking_indexer.py` : script de prétraitement, dindexation et de vectorisation.
 - `build_index.sh` : wrapper pour lancer le script d'indexation.
 - `Dockerfile` : recette de conteneurisation de l'application.
 - `requirements.txt` : dépendances Python.

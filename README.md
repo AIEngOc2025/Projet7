@@ -97,7 +97,8 @@ Les scripts pour tester  l'API ou le RAG se trouvent dans le dossier tests/
 3. Poser des questions via `/ask` ou l'UI Swagger, par ex. :
    - "Quels événements jazz à Paris cette semaine ?"
    - "Y a-t-il des concerts gratuits à la Villette ?"
-```mermaid
+
+```mermaid  
    sequenceDiagram
     participant U as Utilisateur
     participant API as FastAPI (Interface)
@@ -120,6 +121,7 @@ Les scripts pour tester  l'API ou le RAG se trouvent dans le dossier tests/
 ## Architecture détaillée
 
 Le système repose sur une chaîne moderne en quatre étapes :
+
 ```mermaid
    graph TD
        subgraph "Sources de Données"

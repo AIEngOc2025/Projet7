@@ -96,7 +96,7 @@ Les scripts pour tester  l'API ou le RAG se trouvent dans le dossier tests/
    sequenceDiagram
     participant U as Utilisateur
     participant API as FastAPI (Interface)
-    participant VDB as FAISS (Ta Base de Données)
+    participant VDB as FAISS (Base de Données vectorielle)
     participant LLM as Mistral AI (L'IA)
 
     Note over U, LLM: Le flux d'une question utilisateur

@@ -16,9 +16,8 @@ load_dotenv()
 
 def fetch_and_vectorize():
     # --- 1. RÉCUPÉRATION ---
-    # url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records"
-    url ="https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records?limit=20&refine=lastdate_end%3A%222026%22&refine=location_countrycode%3A%22FR%22&refine=location_department%3A%22Paris%22"
-    one_year_ago = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
+    url ="https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records?limit=100&refine=lastdate_end%3A%222026%22&refine=location_countrycode%3A%22FR%22&refine=location_department%3A%22Paris%22"
+    one_year_ago = (datetime.now() - timedelta(days=360)).strftime('%Y-%m-%d')
     
     params = {
         "limit": 100, # Augmenté pour un jeu de données plus riche

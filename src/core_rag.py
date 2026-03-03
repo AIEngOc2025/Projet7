@@ -58,7 +58,7 @@ class RAGSystem:
         url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/evenements-publics-openagenda/records"
         params = {
             "limit": 100,
-            "where": "lastdate_end >= date'2025' AND location_city = 'Paris'",
+            "where": "lastdate_end >= date'2025-03-01' AND location_city = 'Paris'",
             "order_by": "updatedat DESC"
         }
         
@@ -113,17 +113,25 @@ class RAGSystem:
         if not self.vector_db:
             return "La base de données est vide. Veuillez appeler /rebuild d'abord."
 
-        template = """Tu es l'Assistant Officiel des Événements de Paris. Ton rôle est d'aider les utilisateurs à trouver des activités culturelles en utilisant EXCLUSIVEMENT les informations fournies dans le contexte ci-dessous.
+        template = """Tu es l'Assistant Officiel des Événements de Paris.\
+              Ton rôle est d'aider les utilisateurs à trouver des activités culturelles en utilisant EXCLUSIVEMENT les informations \
+                fournies dans le contexte ci-dessous.
 
 ### RÈGLES DE CONDUITE :
-1. **Priorité au Contexte** : Si l'information n'est pas dans le contexte ou si aucun événement ne correspond à la date demandée, réponds que tu ne trouves pas d'information correspondante.
+1. **Priorité au Contexte** : Si l'information n'est pas dans le contexte ou si aucun événement ne correspond ou ne se trouve à moins d'un au dans le passé par rapport à d'aujourd'hui\
+    ,réponds que tu ne trouves pas d'information correspondante.
 2. **Format de Réponse** : 
-   - **Titre de l'événement** (en gras)
-   - 📍 Lieu : [Nom du lieu]
-   - 📅 Date : [Date formatée]
+   - **Titre de l'événement** (en gras) 
+   - 📍 Lieu : [Nom du lieu] 
+   - 📅 Date : [Date formatée] 
    - 📝 Résumé : [2-3 phrases max sur l'intérêt de l'événement]
+   - revenir à la ligne 
 3. **Intelligence Temporelle** : Utilise la "DATE ACTUELLE" pour évaluer si un événement est passé ou futur.
+   Ne pas aller au delà d'un an en arrière.
 4. **Ton** : Professionnel, clair et accueillant.
+
+### CONSIGNES :
+ 1. Les évènements doivent dater de moins d'un AN à partir d'aujourd'hui et/ ou  se poursuivre dans le futur. 
 
 ### CONTEXTE :
 {context}

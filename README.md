@@ -22,7 +22,7 @@ pip install -r requirements.txt
 Un script est fourni pour récupérer les données OpenData et créer l'index FAISS dans `data/vdb_paris` :
 
 ```bash
-./build_index.sh
+./build_index.sh 
 ```
 
 ou
@@ -54,7 +54,7 @@ docker run --rm -p 8000:8000 rag-app
 ```
 
 > **Remarque** : si Docker signale une erreur `docker-credential-xxx` lors du build, installez Docker Desktop
-> ou supprimez/modifiez la clef `credsStore` dans `~/.docker/config.json`.
+> ou supprimez/modifiez la clef `credsStore` dans `~/.docker/config.json` en gardant le champ valeur vide `""` ou en lui affectant une autre valeur.
 
 Des images additionnelles sont fournies ; pour les lister :
 

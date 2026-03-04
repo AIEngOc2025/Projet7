@@ -3,13 +3,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: api-app-instance
+    container_name: rag-api
     ports:
       - "8000:8000"
     env_file:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      - PYTHONPATH=/app:/app/src  #  Assure que Python trouve vos dossiers de code
+      - PYTHONPATH=/app:/app/src  #  Assure que Python trouve les dossierss de code
+    #command: uvicorn src.main:app --host 0.0.0.0 --port 8000  --reload  #  --reload pour le développement, à retirer en production
     volumes:
       - ./data/vdb_paris:/app/data/vdb_paris

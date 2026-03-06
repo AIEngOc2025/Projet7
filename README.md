@@ -50,7 +50,12 @@ L'interface Swagger est disponible sur [http://127.0.0.1:8000/docs](http://127.0
 # lancer le conteneur principal, exposer le port 8000
 # (remplacer par 127.0.0.1:8000:8000 si vous ne souhaitez pas
 # écouter sur toutes les interfaces)
-docker run --rm -p 8000:8000 rag-api
+docker run --rm \
+  -p 8000:8000 \
+  --env-file .env \
+  --name rag-api-instance \
+  rag-api:latest \
+  uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
 
 > **Remarque** : si Docker signale une erreur `docker-credential-xxx` lors du build, installez Docker Desktop

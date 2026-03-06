@@ -1,0 +1,73 @@
+user_input,retrieved_contexts,response,faithfulness,answer_relevancy
+Quels événements tech sont prévus à Paris en 2026 ?,"[""Titre: Forum de l'alternance, édition 2026\nLieu: Cité des Sciences et de l'Industrie\nDate: 2026-04-14T08:00:00+00:00\nDescription: Le Forum de l'alternance est l'opportunité pour les jeunes en recherche d'alternance de rencontrer les CFA et les entreprises afin de construire leur projet professionnel."", 'Titre: 6ème édition du Salon Your Future\nLieu: Parc des Princes - 24 Rue du Commandant Guilbaud\nDate: 2026-01-23T09:00:00+00:00\nDescription: le Salon Your Future propose aux lycéens, étudiants, jeunes diplômés de rencontrer des écoles et des entreprises pour trouver une formation, un stage, une alternance ou un 1er emploi.', 'Titre: IA, emploi et restructurations : anticiper et agir\nLieu: Paris Porte De Versailles - SolutionsCSE\nDate: 2026-03-19T08:45:00+00:00\nDescription: Comprendre les enjeux de l’IA : cette conférence, destinée aux représentants du personnel, propose un véritable tour d’horizon de ses impacts connus et prévisionnels sur l’emploi.']","Voici les événements tech prévus à Paris en 2026 :
+
+- **IA, emploi et restructurations : anticiper et agir**
+  - 📍 Lieu : Paris Porte De Versailles - SolutionsCSE
+  - 📅 Date : 2026-03-19
+  - 📝 Description : Comprendre les enjeux de l’IA : cette conférence, destinée aux représentants du personnel, propose un véritable tour d’horizon de ses impacts connus et prévisionnels sur l’emploi.
+
+- **L’IA, demain**
+  - 📍 Lieu : Cité des sciences et de l'Industrie
+  - 📅 Date : 2026-02-22
+  - 📝 Description : Vous voulez tenter l’aventure de l’écriture ? Vous êtes amateurs de science-fiction ? Rencontrez l'auteur David Bry et participez à un atelier d'écriture convivial. À ne pas manquer !
+
+Ces événements sont programmés pour 2026 et abordent des thèmes liés à l'intelligence artificielle et à ses implications.",0.5555555555555556,
+Y a-t-il des concerts gratuits à Paris en 2026 ?,"['Titre: Zoot Sundays! Sessions Jazz du dimanche\nLieu: JASS CLUB PARIS\nDate: 2026-02-01T18:30:00+00:00\nDescription: 19h30Tous les dimanches, le club vibre aux couleurs du Zoot Collectif !Des formations qui changent, des idées neuves, pour vous proposer un rendez-vous jazz vivant et spontané.Les artistes du coll ...', 'Titre: Zoot For Kids / Atelier Jazz Jeune Public\nLieu: JASS CLUB PARIS\nDate: 2026-01-25T14:00:00+00:00\nDescription: Tous les dimanches, le Zoot Collectif invite les enfants à plonger dans l’univers du jazz.Durant cet atelier les artistes partagent leur passion avec simplicité et bonne humeur : on découvre chaqu ...', 'Titre: Zoot For Kids / Atelier Jazz Jeune Public\nLieu: JASS CLUB PARIS\nDate: 2026-03-01T14:00:00+00:00\nDescription: Tous les dimanches, le Zoot Collectif invite les enfants à plonger dans l’univers du jazz.Durant cet atelier les artistes partagent leur passion avec simplicité et bonne humeur : on découvre chaqu ...']","D'après les informations disponibles dans le contexte, voici les événements musicaux à Paris en 2026 :
+
+- **Zoot Sundays! Sessions Jazz du dimanche**
+  - 📍 Lieu : JASS CLUB PARIS
+  - 📅 Date : 01/02/2026 (18h30)
+  - 📝 Description : Tous les dimanches, le club vibre aux couleurs du Zoot Collectif ! Des formations qui changent, des idées neuves, pour vous proposer un rendez-vous jazz vivant et spontané.
+
+- **Zoot For Kids / Atelier Jazz Jeune Public**
+  - 📍 Lieu : JASS CLUB PARIS
+  - 📅 Date : 01/03/2026 (14h00)
+  - 📝 Description : Tous les dimanches, le Zoot Collectif invite les enfants à plonger dans l’univers du jazz. Durant cet atelier, les artistes partagent leur passion avec simplicité et bonne humeur.
+
+*Note* : Le contexte ne précise pas si ces événements sont gratuits. Pour confirmer, il est recommandé de consulter directement les organisateurs.",1.0,
+Quels sont les événements culturels majeurs à Paris en 2026 ?Quels évènements à la Cité des Sciences?,"[""Titre: Journée mondiale de sensibilisation à l'autisme 2026\nLieu: Cité des sciences et de l'Industrie\nDate: 2026-03-28T08:00:00+00:00\nDescription: Visiteurs autistes et accompagnateurs, profitez de cette journée spéciale pour assister à de nombreuses activités adaptées."", ""Titre: Parcours de l'esprit critique\nLieu: Cité des sciences et de l'Industrie\nDate: 2026-03-21T09:30:00+00:00\nDescription: Venez mettre à l’épreuve votre esprit critique en explorant un parcours d’une douzaine de stands animés par des scientifiques, chercheurs et médiateurs, avec des expériences, quiz, défis..."", ""Titre: Forum de l'alternance, édition 2026\nLieu: Cité des Sciences et de l'Industrie\nDate: 2026-04-14T08:00:00+00:00\nDescription: Le Forum de l'alternance est l'opportunité pour les jeunes en recherche d'alternance de rencontrer les CFA et les entreprises afin de construire leur projet professionnel.""]","Voici les événements culturels majeurs à la Cité des Sciences et de l'Industrie à Paris en 2026, à partir de la date actuelle (03/03/2026) :
+
+---
+
+**Journée mondiale de sensibilisation à l'autisme 2026**
+- 📍 Lieu : Cité des sciences et de l'Industrie
+- 📅 Date : 28 mars 2026
+- 📝 Description : Visiteurs autistes et accompagnateurs, profitez de cette journée spéciale pour assister à de nombreuses activités adaptées.
+
+---
+
+**Parcours de l'esprit critique**
+- 📍 Lieu : Cité des sciences et de l'Industrie
+- 📅 Date : 21 mars 2026
+- 📝 Description : Venez mettre à l’épreuve votre esprit critique en explorant un parcours d’une douzaine de stands animés par des scientifiques, chercheurs et médiateurs, avec des expériences, quiz, défis...
+
+---
+
+**Forum de l'alternance, édition 2026**
+- 📍 Lieu : Cité des Sciences et de l'Industrie
+- 📅 Date : 14 avril 2026
+- 📝 Description : Le Forum de l'alternance est l'opportunité pour les jeunes en recherche d'alternance de rencontrer les CFA et les entreprises afin de construire leur projet professionnel.
+
+---
+
+**Échecs & Maths**
+- 📍 Lieu : Cité des sciences et de l'Industrie
+- 📅 Date : 10 mars 2026
+- 📝 Description : À l’occasion de la Semaine des mathématiques 2026, la Bibliothèque de la Cité des sciences et de l'industrie organise une nouvelle édition d’Échecs & Maths.
+
+---
+
+*Note : L'événement ""Héritage cosmique, un hommage à Queen"" a déjà eu lieu le 11 janvier 2026 et n'est donc pas inclus dans cette liste.*",0.6428571428571429,
+Quels concerts de jazz à Paris en 2026 ?,"['Titre: Zoot Sundays! Sessions Jazz du dimanche\nLieu: JASS CLUB PARIS\nDate: 2026-02-01T18:30:00+00:00\nDescription: 19h30Tous les dimanches, le club vibre aux couleurs du Zoot Collectif !Des formations qui changent, des idées neuves, pour vous proposer un rendez-vous jazz vivant et spontané.Les artistes du coll ...', 'Titre: Zoot For Kids / Atelier Jazz Jeune Public\nLieu: JASS CLUB PARIS\nDate: 2026-01-25T14:00:00+00:00\nDescription: Tous les dimanches, le Zoot Collectif invite les enfants à plonger dans l’univers du jazz.Durant cet atelier les artistes partagent leur passion avec simplicité et bonne humeur : on découvre chaqu ...', 'Titre: Zoot For Kids / Atelier Jazz Jeune Public\nLieu: JASS CLUB PARIS\nDate: 2026-03-01T14:00:00+00:00\nDescription: Tous les dimanches, le Zoot Collectif invite les enfants à plonger dans l’univers du jazz.Durant cet atelier les artistes partagent leur passion avec simplicité et bonne humeur : on découvre chaqu ...']","Voici les concerts de jazz à Paris en 2026 mentionnés dans le contexte :
+
+- **Zoot Sundays! Sessions Jazz du dimanche**
+  - 📍 Lieu : JASS CLUB PARIS
+  - 📅 Date : 01/02/2026 (19h30)
+  - 📝 Description : Tous les dimanches, le club vibre aux couleurs du Zoot Collectif ! Des formations qui changent, des idées neuves, pour vous proposer un rendez-vous jazz vivant et spontané.
+
+- **Riitta Paakki Quartet**
+  - 📍 Lieu : JASS CLUB PARIS
+  - 📅 Date : 16/01/2026 (19h30 & 21h30)
+  - 📝 Description : Pianiste et compositrice finlandaise, Riitta Paakki s’est fait connaître grâce à un parcours marqué par une grande curiosité musicale et un profond attachement au jazz.
+
+Ces événements sont passés par rapport à la date actuelle (03/03/2026). Aucun concert de jazz futur n'est mentionné dans le contexte fourni.",0.6428571428571429,
